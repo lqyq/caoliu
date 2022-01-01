@@ -1,4 +1,4 @@
-#（已失效）
+
 import requests
 import re
 import os
@@ -56,7 +56,7 @@ def _2_get_urlanddl(url, name='default'):
     content = soup.find(attrs={'class': 'tpc_content do_not_catch'}).text
     recon = re.sub('<.*?>', '', content)
     try:
-        with open(title, 'w', encoding='utf-8')as file:
+        with open(title+'.txt', 'w', encoding='utf-8')as file:
             file.write(content)
         print('保存成功')
     except:
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     page2 = input("end")
     crawled=[]
     try:
-        with open('已爬取草榴word.txt', 'r') as file:
+        with open('已爬取草榴word.log', 'r') as file:
                 for line in file:
                     crawled.append(line[:-1])
     except:
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         for i in a:
             if i not in crawled:
                 try:
-                    with open('已爬取草榴word.txt', 'a') as file:
+                    with open('已爬取草榴word.log', 'a') as file:
                         file.write(i+'\n')
                     _2_get_urlanddl('https://co.oustrave.com/' + i + 'html')
 
