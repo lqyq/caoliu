@@ -1,4 +1,5 @@
 #路径问题
+#
 import requests
 import re
 import os
@@ -62,16 +63,16 @@ def getimgscl(url, name='default'):
     res = requests.get(url, headers=headers)
     code = re.findall('charset=(.*)\"', res.text)[0]
     if not code:
-        code = chardet.detect(res.content)
-    res.encoding = code['encoding']
+        code = chardet.detect(res.content)['encoding']
+    res.encoding = code
     text = res.text
     # print(text)
     # pprint(text)
     a = re.findall('ess-data=\'(.*?)\'', text)#需要修改
     title1 = re.findall('<title>(.*?)\|', text)
-    title = title1[0][:-11]
+    title = re.findall('(.*?)P',title1[0])[0]
     print(title)
-    print(code['encoding'],url)
+    print(code,url)
     if title:
         name = title
     pic_list=[]
@@ -80,15 +81,24 @@ def getimgscl(url, name='default'):
         pic_list.append(i)
     return pic_list
 def save_pic(url, count,title):
-    # print(url)
-    # print('save_pic',threading.current_thread())
-    extension=re.findall('.*(\..*)',url)[-1]
-    # print('extension',extension)
+
+    # extension=re.findall('.*(\..*)',url)[-1]#拓展名不一定是后面的那些
+    if '.gif' in url:
+        extension='.gif'
+    if '.png' in url:
+        extension='.png'
+    if '.jpg' in url:
+        extension='.jpg'
+    if '.jpeg' in url:
+        extension='.jpeg'
+    else:
+        extension=''
     try:
         os.makedirs('..'+os.sep+'pic' + os.sep + title)#路径
     except:
         pass
     file_name = (".."+os.sep+'pic'+os.sep+title+os.sep+title+str(count + 1) + extension)#路径
+    file_name=re.sub(re.compile('[/\:*?"<>|]') , '',file_name)
     res = requests.get(url)
     print(len(res.content) // 1024 // 1024, url)
     with open(file_name, 'wb') as f:
@@ -135,7 +145,7 @@ if __name__ == '__main__':
                     del imgs[0]
                     process_download(save_pic, imgs, title)
                 except:
-                    pass
+                    print('下载失败')
 
             else:
                 print('已爬取，跳过',i)
