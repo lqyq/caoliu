@@ -24,8 +24,8 @@ def _1_get_url(page,pic_type):
     res = requests.get(url, headers=headers)
     code = re.findall('charset=(.*)\"', res.text)[0]
     if not code:
-        code=chardet.detect(res.content)
-    res.encoding = code['encoding']
+        code=chardet.detect(res.content)['encoding']
+    res.encoding = code
     text = res.text
     # print(text)
     a = re.findall('a href="(.*?)html"', text)
