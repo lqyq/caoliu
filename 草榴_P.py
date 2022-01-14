@@ -85,14 +85,14 @@ def save_pic(url, count,title):
     # extension=re.findall('.*(\..*)',url)[-1]#拓展名不一定是后面的那些
     if '.gif' in url:
         extension='.gif'
-    if '.png' in url:
+    elif '.png' in url:
         extension='.png'
-    if '.jpg' in url:
+    elif '.jpg' in url:
         extension='.jpg'
-    if '.jpeg' in url:
+    elif '.jpeg' in url:
         extension='.jpeg'
     else:
-        extension=''
+        extension=re.findall('.*(\..*)',url)[-1]#拓展名不一定是后面的那些
     try:
         os.makedirs('..'+os.sep+'pic' + os.sep + title)#路径
     except:
